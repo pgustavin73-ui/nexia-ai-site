@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXIA AI | Administração</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090e1b;color:white;font-family:Arial,sans-serif}
+header{background:#121b2e;padding:22px;border-bottom:1px solid #303b55}
+h1{color:#a58bff;margin:0}
+small,p{color:#a5b0c6}
+main{padding:20px;max-width:1100px;margin:auto}
+.card{background:#151f33;padding:20px;border:1px solid #303b55;border-radius:14px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.value{font-size:28px;font-weight:bold;color:#a58bff}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+nav a{color:white;background:#273452;padding:12px;border-radius:8px;text-decoration:none}
+h2{font-size:20px}
+.notice{color:#ffcf82}
+</style>
+</head>
+<body>
+<header>
+<h1>✦ NEXIA AI</h1>
+<p>Painel administrativo — demonstração</p>
+<nav>
+<a href="index.html">Início</a>
+<a href="#clientes">Clientes</a>
+<a href="#planos">Planos</a>
+<a href="#ferramentas">Ferramentas</a>
+</nav>
+</header>
+<main>
+<h2>Visão geral</h2>
+<p class="notice">Painel demonstrativo. Nenhum dado real está conectado.</p>
+<div class="grid">
+<div class="card"><small>Clientes cadastrados</small><div class="value">—</div></div>
+<div class="card"><small>Receita mensal</small><div class="value">—</div></div>
+<div class="card"><small>Assinaturas ativas</small><div class="value">—</div></div>
+<div class="card"><small>Ferramentas disponíveis</small><div class="value">16</div></div>
+</div>
+<section id="clientes" class="card">
+<h2>👥 Gerenciar clientes</h2>
+<p>Lista de usuários e assinaturas: aguardando integração com banco de dados.</p>
+</section>
+<section id="planos" class="card">
+<h2>💳 Planos</h2>
+<p>Essencial — R$ 29,90/mês</p>
+<p>Profissional — R$ 59,90/mês</p>
+<p>Enterprise — R$ 99,90/mês</p>
+</section>
+<section id="ferramentas" class="card">
+<h2>🤖 Ferramentas de IA</h2>
+<p>CRM, chatbot, agentes de IA, automações, marketing, BI e outras ferramentas.</p>
+</section>
+<section class="card">
+<h2>🔐 Acesso do proprietário</h2>
+<p>Login e permissões ainda precisam ser configurados no servidor.</p>
+</section>
+</main>
+</body>
+</html>
