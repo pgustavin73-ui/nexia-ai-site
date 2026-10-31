@@ -41,7 +41,7 @@
         : await client.auth.signInWithPassword({ email, password });
       if (result.error) throw result.error;
       if (mode === 'signup' && !result.data.session) message('Confira seu e-mail e confirme o cadastro antes de entrar.');
-      else { dialog.close(); await updateSession(); location.href = 'crm.html'; }
+      else { dialog.close(); await updateSession(); location.href = 'painel.html'; }
     } catch (err) { message(err.message || 'Não foi possível concluir. Tente novamente.', true); }
     finally { submit.disabled = false; }
   });
