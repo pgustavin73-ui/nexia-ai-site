@@ -1,1 +1,18 @@
-<!doctype html><html lang="pt-br"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEXIA AI</title><link rel="stylesheet" href="style.css"></head><body><header><h1>NEXIA AI</h1><nav><a>Recursos</a><a>Planos</a><a>Contato</a></nav></header><main><section class="hero"><h2>Tudo o que sua empresa precisa em um só lugar.</h2><p>CRM, IA, automações, landing pages, help desk, telefonia, BI e mais.</p><a class="btn" href="#planos">Teste grátis</a></section><section id="planos"><div class="card"><h3>Essencial</h3><p class="price">R$29,90/mês</p></div><div class="card"><h3>Profissional</h3><p class="price">R$59,90/mês</p></div><div class="card"><h3>Enterprise</h3><p class="price">R$99,90/mês</p></div></section></main><footer>© NEXIA AI</footer></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NEXIA AI — Login e cadastro</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html">NEXIA <span>AI</span></a><nav><a href="#recursos">Recursos</a><a href="#planos">Planos</a><button id="openAuth" class="outline">Entrar</button><button id="logout" class="outline" hidden>Sair</button></nav></header>
+  <main><section class="hero"><div class="eyebrow">Uma plataforma. Mais possibilidades.</div><h1>Tudo o que sua empresa precisa <em>em um só lugar.</em></h1><p>CRM, IA, automações, landing pages, help desk, telefonia, BI e muito mais.</p><button id="start" class="primary">Criar conta</button><a id="crmLink" class="outline link" href="crm.html" hidden>Ir ao CRM</a></section><section id="recursos"><h2>Ferramentas para crescer</h2><div class="cards"><article>CRM de vendas</article><article>Automação e IA</article><article>Atendimento e relatórios</article></div></section><section id="planos"><h2>Planos</h2><div class="cards"><article><h3>Essencial</h3><strong>R$ 29,90/mês</strong></article><article><h3>Profissional</h3><strong>R$ 59,90/mês</strong></article><article><h3>Enterprise</h3><strong>R$ 99,90/mês</strong></article></div><small>Valores exibidos para apresentação. Pagamentos ainda não estão integrados.</small></section></main>
+  <dialog id="authDialog"><form id="authForm" method="dialog"><div class="dialogHead"><h2 id="authTitle">Entrar</h2><button id="closeAuth" type="button" class="iconBtn" aria-label="Fechar">×</button></div><label for="email">E-mail</label><input id="email" type="email" autocomplete="email" required><label for="password">Senha</label><input id="password" type="password" minlength="6" autocomplete="current-password" required><button id="submitAuth" type="submit" class="primary full">Entrar</button><button id="switchMode" type="button" class="textBtn">Não tem conta? Criar conta</button><button id="resetPassword" type="button" class="textBtn">Esqueci minha senha</button><p id="status" role="status" aria-live="polite"></p></form></dialog>
+  <footer>© NEXIA AI</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
