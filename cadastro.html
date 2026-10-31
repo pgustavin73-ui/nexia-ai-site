@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro | NEXIA AI</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <main>
+    <h1>NEXIA AI</h1>
+    <h2>Crie sua conta</h2>
+
+    <form id="cadastro">
+      <input id="email" type="email"
+        placeholder="Seu e-mail" required>
+
+      <input id="senha" type="password"
+        placeholder="Sua senha"
+        minlength="6" required>
+
+      <button type="submit">Criar conta</button>
+    </form>
+
+    <p id="mensagem" role="status"></p>
+    <a href="index.html">Voltar ao início</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const form = document.getElementById('cadastro');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      mensagem.textContent = 'Criando conta...';
+
+      if (!window.supabase || !window.SUPABASE_URL ||
+          !window.SUPABASE_PUBLISHABLE_KEY) {
+        mensagem.textContent =
+          'Configuração do Supabase não encontrada.';
+        return;
+      }
+
+      const cliente = window.supabase.createClient(
+        window.SUPABASE_URL,
+        window.SUPABASE_PUBLISHABLE_KEY
+      );
+
+      const { error } = await cliente.auth.signUp({
+        email: document.getElementById('email').value,
+        password: document.getElementById('senha').value,
+        options: {
+          emailRedirectTo: new URL('index.html', location.href).href
+        }
+      });
+
+      mensagem.textContent = error
+        ? 'Erro: ' + error.message
+        : 'Confira seu e-mail para confirmar o cadastro.';
+    });
+  </script>
+</body>
+</html>
