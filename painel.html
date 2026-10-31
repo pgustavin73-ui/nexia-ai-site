@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel | NEXIA AI</title>
+  <style>
+    body {
+      margin: 0;
+      background: #080e1c;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background: #121d32;
+      padding: 22px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #70c4ff;
+    }
+    main { padding: 20px; }
+    .card {
+      background: #162238;
+      border: 1px solid #30425d;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 24px; }
+    a { color: #70c4ff; }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>NEXIA AI</header>
+  <main id="conteudo" hidden>
+    <h1>Bem-vindo ao seu painel!</h1>
+    <p id="usuario"></p>
+
+    <div class="card">
+      <h2>CRM de Vendas</h2>
+      <p>Gerencie seus clientes e oportunidades.</p>
+    </div>
+
+    <div class="card">
+      <h2>Agentes de IA</h2>
+      <p>Configure seus assistentes inteligentes.</p>
+    </div>
+
+    <div class="card">
+      <h2>Automação</h2>
+      <p>Organize seus processos empresariais.</p>
+    </div>
+
+    <div class="card">
+      <h2>Relatórios</h2>
+      <p>Acompanhe os resultados da empresa.</p>
+    </div>
+
+    <button id="sair">Sair da conta</button>
+  </main>
+
+  <p id="status">Verificando acesso...</p>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="./config.js?v=2"></script>
+  <script>
+    async function iniciar() {
+      const status = document.getElementById('status');
+
+      if (!window.supabase ||
+          !window.SUPABASE_URL ||
+          !window.SUPABASE_PUBLISHABLE_KEY) {
+        status.textContent = 'Erro na configuração.';
+        return;
+      }
+
+      const cliente = window.supabase.createClient(
+        window.SUPABASE_URL,
+        window.SUPABASE_PUBLISHABLE_KEY
+      );
+
+      const { data, error } = await cliente.auth.getUser();
+
+      if (error || !data.user) {
+        location.replace('login.html');
+        return;
+      }
+
+      document.getElementById('usuario').textContent =
+        'Conta: ' + data.user.email;
+
+      document.getElementById('conteudo').hidden = false;
+      status.hidden = true;
+
+      document.getElementById('sair').onclick = async () => {
+        await cliente.auth.signOut();
+        location.replace('login.html');
+      };
+    }
+
+    iniciar().catch(() => {
+      document.getElementById('status').textContent =
+        'Não foi possível verificar o acesso.';
+    });
+  </script>
+</body>
+</html>
