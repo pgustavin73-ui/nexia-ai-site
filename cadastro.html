@@ -50,8 +50,7 @@ document.getElementById('loginGoogle').addEventListener('click', async () => {
   const { error } = await cliente.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: new URL('index.html', location.href).href
-    }
+      redirectTo: new URL('painel.html', location.href).href
   });
 
   if (error) {
