@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,85 +10,65 @@
   <main>
     <h1>NEXIA AI</h1>
     <h2>Crie sua conta</h2>
-
     <form id="cadastro">
-      <input id="email" type="email"
-        placeholder="Seu e-mail" required>
-
-      <input id="senha" type="password"
-        placeholder="Sua senha"
-        minlength="6" required>
-
+      <input id="email" type="email" placeholder="Seu e-mail" autocomplete="email" required>
+      <input id="senha" type="password" placeholder="Sua senha" minlength="6" autocomplete="new-password" required>
       <button type="submit">Criar conta</button>
-    </form><button type="button" id="loginGoogle">
-  Continuar com Google
-    </button>
-
-    <p id="mensagem" role="status"></p>
+    </form>
+    <button type="button" id="loginGoogle">Continuar com Google</button>
+    <p id="mensagem" role="status" aria-live="polite"></p>
     <a href="index.html">Voltar ao início</a>
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <script src="./config.js?v=3"></script>
+  <script src="./config.js?v=5"></script>
   <script>
-   
-    document.getElementById('loginGoogle').addEventListener('click', async () => {
-  alert('Botão Google funcionando!');
-  const mensagem = document.getElementById('mensagem');
-
-  if (!window.supabase || !window.SUPABASE_URL ||
-      !window.SUPABASE_PUBLISHABLE_KEY) {
-    mensagem.textContent = 'Supabase não configurado.';
-    return;
-  }
-
-  const cliente = window.supabase.createClient(
-    window.SUPABASE_URL,
-    window.SUPABASE_PUBLISHABLE_KEY
-  );
-
-  const { error } = await cliente.auth.signInWithOAuth({
-    provider: 'google',
-options: {
-  redirectTo: new URL('painel.html', location.href).href
-}
-});
-
-  if (error) {
-    mensagem.textContent = 'Erro: ' + error.message;
-  }
-});
-    
-    const form = document.getElementById('cadastro');
     const mensagem = document.getElementById('mensagem');
+    const googleBtn = document.getElementById('loginGoogle');
+    const form = document.getElementById('cadastro');
+    const pronto = window.supabase && window.SUPABASE_URL && window.SUPABASE_PUBLISHABLE_KEY;
+    const cliente = pronto ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    }) : null;
+    if (!cliente) mensagem.textContent = 'Configuração do Supabase não encontrada.';
+
+    // Se a pessoa já estiver conectada, pode abrir o painel sem fazer novo login.
+    if (cliente) {
+      cliente.auth.getSession().then(({data, error}) => {
+        if (!error && data.session) location.replace('painel.html');
+      }).catch(() => {});
+    }
+
+    googleBtn.addEventListener('click', async () => {
+      if (!cliente) return;
+      googleBtn.disabled = true;
+      mensagem.textContent = 'Abrindo o Google...';
+      try {
+        const { error } = await cliente.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: new URL('painel.html', location.href).href }
+        });
+        if (error) throw error;
+      } catch (erro) {
+        mensagem.textContent = 'Erro ao entrar com Google: ' + erro.message;
+        googleBtn.disabled = false;
+      }
+    });
 
     form.addEventListener('submit', async (evento) => {
       evento.preventDefault();
+      if (!cliente) return;
       mensagem.textContent = 'Criando conta...';
-
-      if (!window.supabase || !window.SUPABASE_URL ||
-          !window.SUPABASE_PUBLISHABLE_KEY) {
-        mensagem.textContent =
-          'Configuração do Supabase não encontrada.';
-        return;
+      try {
+        const { error } = await cliente.auth.signUp({
+          email: document.getElementById('email').value,
+          password: document.getElementById('senha').value,
+          options: { emailRedirectTo: new URL('painel.html', location.href).href }
+        });
+        if (error) throw error;
+        mensagem.textContent = 'Confira seu e-mail para confirmar o cadastro.';
+      } catch (erro) {
+        mensagem.textContent = 'Erro: ' + erro.message;
       }
-
-      const cliente = window.supabase.createClient(
-        window.SUPABASE_URL,
-        window.SUPABASE_PUBLISHABLE_KEY
-      );
-
-      const { error } = await cliente.auth.signUp({
-        email: document.getElementById('email').value,
-        password: document.getElementById('senha').value,
-        options: {
-          emailRedirectTo: new URL('index.html', location.href).href
-        }
-      });
-
-      mensagem.textContent = error
-        ? 'Erro: ' + error.message
-        : 'Confira seu e-mail para confirmar o cadastro.';
     });
   </script>
 </body>
