@@ -88,7 +88,7 @@
       const { data, error } = await cliente.auth.getUser();
 
       if (error || !data.user) {
-        location.replace('login.html');
+        location.replace('cadastro.html');
         return;
       }
 
@@ -100,7 +100,7 @@
 
       document.getElementById('sair').onclick = async () => {
         await cliente.auth.signOut();
-        location.replace('login.html');
+        location.replace('cadastro.html');
       };
     }
 
