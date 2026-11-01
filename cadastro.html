@@ -21,7 +21,9 @@
         minlength="6" required>
 
       <button type="submit">Criar conta</button>
-    </form>
+    </form><button type="button" id="loginGoogle">
+  Continuar com Google
+    </button>
 
     <p id="mensagem" role="status"></p>
     <a href="index.html">Voltar ao início</a>
@@ -30,6 +32,33 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="./config.js?v=2"></script>
   <script>
+    
+document.getElementById('loginGoogle').addEventListener('click', async () => {
+  const mensagem = document.getElementById('mensagem');
+
+  if (!window.supabase || !window.SUPABASE_URL ||
+      !window.SUPABASE_PUBLISHABLE_KEY) {
+    mensagem.textContent = 'Supabase não configurado.';
+    return;
+  }
+
+  const cliente = window.supabase.createClient(
+    window.SUPABASE_URL,
+    window.SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const { error } = await cliente.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: new URL('index.html', location.href).href
+    }
+  });
+
+  if (error) {
+    mensagem.textContent = 'Erro: ' + error.message;
+  }
+});
+    
     const form = document.getElementById('cadastro');
     const mensagem = document.getElementById('mensagem');
 
