@@ -32,8 +32,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="./config.js?v=2"></script>
   <script>
-    
-document.getElementById('loginGoogle').addEventListener('click', async () => {
+   
+    document.getElementById('loginGoogle').addEventListener('click', async () => {
+  alert('Botão Google funcionando!');
   const mensagem = document.getElementById('mensagem');
 
   if (!window.supabase || !window.SUPABASE_URL ||
