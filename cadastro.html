@@ -14,6 +14,7 @@
       <input id="email" type="email" placeholder="Seu e-mail" autocomplete="email" required>
       <input id="senha" type="password" placeholder="Sua senha" minlength="6" autocomplete="new-password" required>
       <button type="submit">Criar conta</button>
+    <button type="button" id="entrar">Entrar</button>
     </form>
     <button type="button" id="loginGoogle">Continuar com Google</button>
     <p id="mensagem" role="status" aria-live="polite"></p>
@@ -70,6 +71,24 @@
         mensagem.textContent = 'Erro: ' + erro.message;
       }
     });
+  
+document.getElementById('entrar').addEventListener('click', async () => {
+  if (!cliente) {
+    mensagem.textContent = 'Supabase não configurado.';
+    return;
+  }
+
+  const { data, error } = await cliente.auth.getSession();
+
+  if (error) {
+    mensagem.textContent = 'Erro: ' + error.message;
+  } else if (data.session) {
+    window.location.href = 'painel.html';
+  } else {
+    mensagem.textContent = 'Entre com Google ou crie sua conta primeiro.';
+  }
+});
+    
   </script>
 </body>
 </html>
