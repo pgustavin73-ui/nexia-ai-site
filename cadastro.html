@@ -50,9 +50,10 @@
 
   const { error } = await cliente.auth.signInWithOAuth({
     provider: 'google',
-    options: {
-      redirectTo: new URL('painel.html', location.href).href
-  });
+options: {
+  redirectTo: new URL('painel.html', location.href).href
+}
+});
 
   if (error) {
     mensagem.textContent = 'Erro: ' + error.message;
