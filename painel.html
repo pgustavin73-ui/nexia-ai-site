@@ -5,35 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Painel | NEXIA AI</title>
   <style>
-    body {
-      margin: 0;
-      background: #080e1c;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
-    header {
-      background: #121d32;
-      padding: 22px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #70c4ff;
-    }
+    body { margin: 0; background: #080e1c; color: white; font-family: Arial, sans-serif; }
+    header { background: #121d32; padding: 22px; font-size: 24px; font-weight: bold; color: #70c4ff; }
     main { padding: 20px; }
-    .card {
-      background: #162238;
-      border: 1px solid #30425d;
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 16px;
-    }
+    .card { background: #162238; border: 1px solid #30425d; border-radius: 14px; padding: 22px; margin-bottom: 16px; }
     h1 { font-size: 24px; }
     a { color: #70c4ff; }
-    button {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    button { padding: 12px; border: none; border-radius: 8px; cursor: pointer; }
+    #status { padding: 20px; }
   </style>
 </head>
 <body>
@@ -41,73 +20,63 @@
   <main id="conteudo" hidden>
     <h1>Bem-vindo ao seu painel!</h1>
     <p id="usuario"></p>
-
-    <div class="card">
-      <h2>CRM de Vendas</h2>
-      <p>Gerencie seus clientes e oportunidades.</p>
-    </div>
-
-    <div class="card">
-      <h2>Agentes de IA</h2>
-      <p>Configure seus assistentes inteligentes.</p>
-    </div>
-
-    <div class="card">
-      <h2>Automação</h2>
-      <p>Organize seus processos empresariais.</p>
-    </div>
-
-    <div class="card">
-      <h2>Relatórios</h2>
-      <p>Acompanhe os resultados da empresa.</p>
-    </div>
-
+    <div class="card"><h2>CRM de Vendas</h2><p>Gerencie seus clientes e oportunidades.</p></div>
+    <div class="card"><h2>Agentes de IA</h2><p>Configure seus assistentes inteligentes.</p></div>
+    <div class="card"><h2>Automação</h2><p>Organize seus processos empresariais.</p></div>
+    <div class="card"><h2>Relatórios</h2><p>Acompanhe os resultados da empresa.</p></div>
     <button id="sair">Sair da conta</button>
   </main>
-
-  <p id="status">Verificando acesso...</p>
-
+  <p id="status" role="status" aria-live="polite">Verificando acesso...</p>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <script src="./config.js?v=4"></script>
+  <script src="./config.js?v=5"></script>
   <script>
-    async function iniciar() {
-      const status = document.getElementById('status');
+    const statusEl = document.getElementById('status');
+    const conteudo = document.getElementById('conteudo');
+    const configurado = window.supabase && window.SUPABASE_URL && window.SUPABASE_PUBLISHABLE_KEY;
+    if (!configurado) {
+      statusEl.textContent = 'Supabase não configurado. Verifique config.js.';
+    } else {
+      const cliente = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      });
 
-      if (!window.supabase ||
-          !window.SUPABASE_URL ||
-          !window.SUPABASE_PUBLISHABLE_KEY) {
-        status.textContent = 'Erro na configuração.';
-        return;
+      function mostrarUsuario(usuario) {
+        document.getElementById('usuario').textContent = 'Conta: ' + (usuario.email || 'Conectada');
+        conteudo.hidden = false;
+        statusEl.hidden = true;
       }
 
-      const cliente = window.supabase.createClient(
-        window.SUPABASE_URL,
-        window.SUPABASE_PUBLISHABLE_KEY
-      );
-
-      const { data, error } = await cliente.auth.getUser();
-
-      if (error || !data.user) {
-        location.replace('cadastro.html');
-        return;
+      async function iniciar() {
+        try {
+          // Aguarda o Supabase processar o retorno OAuth antes de verificar a sessão.
+          const { data: sessao, error: erroSessao } = await cliente.auth.getSession();
+          if (erroSessao) throw erroSessao;
+          if (!sessao.session) {
+            statusEl.textContent = 'Você ainda não está conectado. Entre com Google ou e-mail para acessar o painel.';
+            const link = document.createElement('a');
+            link.href = 'cadastro.html';
+            link.textContent = ' Ir para cadastro';
+            statusEl.appendChild(link);
+            return;
+          }
+          const { data, error } = await cliente.auth.getUser();
+          if (error || !data.user) throw error || new Error('Sessão não encontrada.');
+          mostrarUsuario(data.user);
+        } catch (erro) {
+          statusEl.textContent = 'Não foi possível confirmar o login: ' + erro.message + ' ';
+          const link = document.createElement('a');
+          link.href = 'cadastro.html';
+          link.textContent = 'Tentar novamente';
+          statusEl.appendChild(link);
+        }
       }
-
-      document.getElementById('usuario').textContent =
-        'Conta: ' + data.user.email;
-
-      document.getElementById('conteudo').hidden = false;
-      status.hidden = true;
-
-      document.getElementById('sair').onclick = async () => {
-        await cliente.auth.signOut();
+      document.getElementById('sair').addEventListener('click', async () => {
+        const { error } = await cliente.auth.signOut();
+        if (error) { alert('Erro ao sair: ' + error.message); return; }
         location.replace('cadastro.html');
-      };
+      });
+      iniciar();
     }
-
-    iniciar().catch(() => {
-      document.getElementById('status').textContent =
-        'Não foi possível verificar o acesso.';
-    });
   </script>
 </body>
 </html>
