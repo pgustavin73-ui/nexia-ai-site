@@ -164,6 +164,50 @@ async function carregar() {
       tr.appendChild(td);
     }
 
+   
+const editar = document.createElement('button');
+editar.textContent = 'Editar';
+editar.style.marginRight = '8px';
+
+editar.onclick = async () => {
+  const nome = prompt('Nome da empresa:', item.nome);
+  if (nome === null) return;
+  if (!nome.trim()) {
+    alert('O nome não pode ficar vazio.');
+    return;
+  }
+
+  const contato = prompt('Contato:', item.contato || '');
+  if (contato === null) return;
+
+  const valor = prompt('Valor em R$:', item.valor);
+  if (valor === null) return;
+  if (valor.trim() === '' || !Number.isFinite(Number(valor)) || Number(valor) < 0) {
+    alert('Digite um valor válido.');
+    return;
+  }
+
+  editar.disabled = true;
+
+  const { error } = await cliente
+    .from('negociacoes')
+    .update({
+      nome: nome.trim(),
+      contato: contato.trim(),
+      valor: Number(valor)
+    })
+    .eq('id', item.id)
+    .eq('user_id', usuario.id);
+
+  if (error) {
+    mensagem('Erro ao editar: ' + error.message);
+  } else {
+    mensagem('Negociação atualizada!');
+  }
+
+  await carregar();
+};
+    
     const td = document.createElement('td');
     const botao = document.createElement('button');
     botao.textContent = 'Excluir';
@@ -189,6 +233,7 @@ async function carregar() {
       await carregar();
     };
 
+    td.appendChild(editar);
     td.appendChild(botao);
     tr.appendChild(td);
     lista.appendChild(tr);
