@@ -72,6 +72,12 @@ td,th{padding:12px;border-bottom:1px solid #303c58;text-align:left}
 
   <section>
 <h2>Minhas negociações</h2>
+    <input
+  type="search"
+  id="pesquisaClientes"
+  placeholder="🔍 Pesquisar cliente ou empresa..."
+  style="width:100%;padding:12px;margin:10px 0;"
+>
 <p>Total: <strong id="total">0</strong></p>
 <div class="tabela">
 <table>
@@ -177,8 +183,19 @@ function atualizarFunil(negociacoes) {
     funil.appendChild(card);
   }
 }
-  
+  let todosClientes = [];
+
+function filtrarClientes() {
+  const pesquisa = $('pesquisaClientes').value.toLowerCase();
+
+  document.querySelectorAll('#lista tr').forEach((linha) => {
+    const texto = linha.textContent.toLowerCase();
+    linha.style.display = texto.includes(pesquisa) ? '' : 'none';
+  });
+}
+  $('pesquisaClientes').addEventListener('input', filtrarClientes);
   async function carregar() {
+    
   const {data, error} = await cliente
     .from('negociacoes')
     .select('id,nome,contato,valor,etapa')
@@ -194,7 +211,7 @@ function atualizarFunil(negociacoes) {
   lista.replaceChildren();
   $('total').textContent = data.length;
     atualizarFunil(data);
-
+todosClientes = data || [];
   for (const item of data) {
     const tr = document.createElement('tr');
 
