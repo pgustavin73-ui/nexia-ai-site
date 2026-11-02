@@ -82,6 +82,10 @@
   <div id="graficoMensal"></div>
       </div>
     <div class="card">
+  <h2>📈 Vendas dos últimos 6 meses</h2>
+  <div id="graficoSeisMeses"></div>
+    </div>
+    <div class="card">
   <h2>CRM de Vendas</h2>
   <p>Gerencie seus clientes e oportunidades.</p>
   <a href="crm.html">
@@ -203,6 +207,53 @@ Object.keys(meses).sort().forEach(mes => {
 if (Object.keys(meses).length === 0) {
   graficoMensal.textContent = 'Nenhuma venda ganha registrada.';
   }
+  const graficoSeisMeses = document.getElementById('graficoSeisMeses');
+graficoSeisMeses.innerHTML = '';
+
+const hoje = new Date();
+const dadosSeisMeses = [];
+
+for (let i = 5; i >= 0; i--) {
+  const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+  const ano = data.getFullYear();
+  const mes = data.getMonth();
+
+  const valor = negocios
+    .filter(n => {
+      if (n.etapa !== 'Ganho' || !n.created_at) return false;
+      const d = new Date(n.created_at);
+      return d.getFullYear() === ano && d.getMonth() === mes;
+    })
+    .reduce((soma, n) => soma + (Number(n.valor) || 0), 0);
+
+  dadosSeisMeses.push({
+    nome: data.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
+    valor
+  });
+}
+
+const maiorSeisMeses = Math.max(1, ...dadosSeisMeses.map(m => m.valor));
+
+dadosSeisMeses.forEach(m => {
+  const linha = document.createElement('div');
+  linha.style.marginBottom = '16px';
+
+  const titulo = document.createElement('p');
+  titulo.textContent = `${m.nome} — ${m.valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  })}`;
+
+  const barra = document.createElement('div');
+  barra.style.height = '22px';
+  barra.style.borderRadius = '8px';
+  barra.style.background = '#70c4ff';
+  barra.style.width = `${(m.valor / maiorSeisMeses) * 100}%`;
+
+  linha.appendChild(titulo);
+  linha.appendChild(barra);
+  graficoSeisMeses.appendChild(linha);
+});
   const etapas = ['Novo lead', 'Em contato', 'Proposta', 'Negociação', 'Ganho', 'Perdido'];
 const grafico = document.getElementById('graficoFunil');
 grafico.innerHTML = '';
