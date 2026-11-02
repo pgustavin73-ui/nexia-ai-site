@@ -1,27 +1,233 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NEXIA AI | CRM de testes</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXIA AI | CRM</title>
 <style>
-:root{color-scheme:dark;font-family:Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:#090e1b;color:#f8f9ff}header{padding:24px;background:#121a2e;border-bottom:1px solid #33405d}h1{margin:0;color:#a58bff}header p{color:#aeb8cf}main{max-width:1000px;margin:auto;padding:20px}.notice{color:#ffd38b;background:#342b1e;padding:14px;border-radius:12px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}.stat,.panel{background:#151e32;border:1px solid #303c58;border-radius:14px;padding:18px}.stat strong{display:block;font-size:27px;color:#a58bff;margin-top:8px}.panel{margin-bottom:20px}form{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}label{font-size:13px;color:#c7cce0}input,select,button{font:inherit;border-radius:9px;padding:12px}input,select{width:100%;background:#0b1324;border:1px solid #405071;color:white;margin-top:6px}button{background:#9576f7;color:#0c0920;font-weight:bold;border:0;cursor:pointer}.secondary{background:#273653;color:white}.danger{background:#48283a;color:#ffd4dc}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{padding:7px;font-size:13px}table{width:100%;border-collapse:collapse;min-width:610px}th,td{padding:12px;text-align:left;border-bottom:1px solid #303c58}th{color:#bdc6db}.scroll{overflow-x:auto}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.toolbar input{flex:1;min-width:200px}a{color:#c3b3ff}.empty{color:#9da9c2;text-align:center;padding:20px}
+*{box-sizing:border-box}
+body{margin:0;background:#090e1b;color:white;font-family:Arial,sans-serif}
+header{background:#151e32;padding:22px}
+h1{color:#a58bff;margin:0}
+main{max-width:950px;margin:auto;padding:20px}
+section{background:#151e32;border:1px solid #303c58;border-radius:14px;padding:20px;margin-bottom:18px}
+input,select,button{padding:12px;border-radius:8px;font-size:15px}
+input,select{background:#0b1324;color:white;border:1px solid #405071;width:100%;margin:6px 0 12px}
+button{background:#9576f7;border:0;color:#0c0920;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+a{color:#c3b3ff}
+#mensagem{color:#ffd38b}
+table{width:100%;border-collapse:collapse;min-width:550px}
+td,th{padding:12px;border-bottom:1px solid #303c58;text-align:left}
+.tabela{overflow-x:auto}
+.excluir{background:#48283a;color:white}
 </style>
 </head>
-<body><header><h1>✦ NEXIA AI</h1><p>CRM • Ambiente demonstrativo</p><a href="index.html">← Voltar ao site</a></header>
-<main><div class="notice"><strong>Somente para testes.</strong> Os dados ficam apenas neste navegador. Não insira informações reais de clientes. Não há login nem sincronização.</div>
-<section class="stats"><div class="stat">Clientes<strong id="total">0</strong></div><div class="stat">Negociações abertas<strong id="abertas">0</strong></div><div class="stat">Vendas ganhas<strong id="ganhas">0</strong></div><div class="stat">Valor ganho<strong id="valor">R$ 0</strong></div></section>
-<section class="panel"><h2>Cadastrar negociação de teste</h2><form id="form"><div><label for="nome">Nome fictício</label><input id="nome" maxlength="80" placeholder="Ex.: Empresa Exemplo" required></div><div><label for="contato">Contato fictício (opcional)</label><input id="contato" maxlength="80" placeholder="Ex.: Contato Teste"></div><div><label for="valorNeg">Valor (R$)</label><input id="valorNeg" type="number" min="0" max="100000000" step="0.01" value="0" required></div><div><label for="etapa">Etapa</label><select id="etapa"><option>Novo lead</option><option>Em contato</option><option>Proposta</option><option>Ganho</option><option>Perdido</option></select></div><div style="align-self:end"><button type="submit">+ Adicionar</button></div></form></section>
-<section class="panel"><h2>Negociações</h2><div class="toolbar"><input id="busca" aria-label="Buscar" placeholder="Pesquisar por nome ou contato"><button id="exemplos" class="secondary" type="button">Adicionar exemplos</button><button id="limpar" class="danger" type="button">Limpar testes</button></div><div class="scroll"><table><thead><tr><th>Empresa</th><th>Contato</th><th>Valor</th><th>Etapa</th><th>Ações</th></tr></thead><tbody id="linhas"></tbody></table></div><p id="vazio" class="empty">Nenhuma negociação cadastrada.</p></section>
-</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<body>
+<header>
+<h1>✦ NEXIA AI</h1>
+<p>CRM conectado ao Supabase</p>
+<a href="painel.html">Voltar ao painel</a>
+</header>
+
+<main>
+<section>
+<h2>Minha conta</h2>
+<p id="usuario">Verificando login...</p>
+<p id="mensagem" role="status"></p>
+</section>
+
+<section>
+<h2>Cadastrar negociação</h2>
+<form id="form">
+<label>Nome da empresa</label>
+<input id="nome" required maxlength="80" placeholder="Empresa Exemplo">
+
+<label>Contato</label>
+<input id="contato" maxlength="80" placeholder="Contato de teste">
+
+<label>Valor (R$)</label>
+<input id="valor" type="number" min="0" step="0.01" value="0" required>
+
+<label>Etapa</label>
+<select id="etapa">
+<option>Novo lead</option>
+<option>Em contato</option>
+<option>Proposta</option>
+<option>Negociação</option>
+<option>Ganho</option>
+<option>Perdido</option>
+</select>
+
+<button id="salvar" type="submit" disabled>Salvar no Supabase</button>
+</form>
+</section>
+
+<section>
+<h2>Minhas negociações</h2>
+<p>Total: <strong id="total">0</strong></p>
+<div class="tabela">
+<table>
+<thead>
+<tr>
+<th>Empresa</th>
+<th>Contato</th>
+<th>Valor</th>
+<th>Etapa</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody id="lista"></tbody>
+</table>
+</div>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="./config.js"></script>
 <script>
-  'use strict';
-  const KEY='nexia-crm-demo-v1';let negocios=[];
+'use strict';
 
-try{const saved=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(saved))negocios=saved.filter(x=>x&&typeof x.nome==='string'&&typeof x.id==='string');}catch(e){}
-const $=id=>document.getElementById(id);const moeda=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});const etapas=['Novo lead','Em contato','Proposta','Ganho','Perdido'];
-function salvar(){try{localStorage.setItem(KEY,JSON.stringify(negocios))}catch(e){alert('Não foi possível salvar neste navegador.')}}
-function render(){ $('total').textContent=negocios.length;$('abertas').textContent=negocios.filter(x=>!['Ganho','Perdido'].includes(x.etapa)).length;$('ganhas').textContent=negocios.filter(x=>x.etapa==='Ganho').length;$('valor').textContent=moeda(negocios.filter(x=>x.etapa==='Ganho').reduce((s,x)=>s+Number(x.valor||0),0));const q=$('busca').value.trim().toLowerCase();const lista=negocios.filter(x=>(x.nome+' '+x.contato).toLowerCase().includes(q));const tbody=$('linhas');tbody.replaceChildren();$('vazio').hidden=lista.length>0;for(const item of lista){const tr=document.createElement('tr');for(const val of [item.nome,item.contato||'—',moeda(item.valor)]){const td=document.createElement('td');td.textContent=val;tr.append(td)}const tdEtapa=document.createElement('td'),sel=document.createElement('select');for(const etapa of etapas){const o=document.createElement('option');o.textContent=etapa;o.value=etapa;sel.append(o)}sel.value=item.etapa;sel.addEventListener('change',()=>{item.etapa=sel.value;salvar();render()});tdEtapa.append(sel);tr.append(tdEtapa);const tdAcao=document.createElement('td'),b=document.createElement('button');b.className='danger';b.textContent='Excluir';b.addEventListener('click',()=>{if(confirm('Excluir esta negociação de teste?')){negocios=negocios.filter(x=>x.id!==item.id);salvar();render()}});tdAcao.append(b);tr.append(tdAcao);tbody.append(tr)}}
-$('form').addEventListener('submit',e=>{e.preventDefault();const nome=$('nome').value.trim();if(!nome)return;negocios.unshift({id:String(Date.now())+'-'+Math.random(),nome,contato:$('contato').value.trim(),valor:Number($('valorNeg').value),etapa:$('etapa').value});salvar();$('form').reset();render()});$('busca').addEventListener('input',render);$('exemplos').addEventListener('click',()=>{const exemplos=[['Empresa Alfa','Pessoa A',1200,'Novo lead'],['Empresa Beta','Pessoa B',2900,'Proposta'],['Empresa Gama','Pessoa C',599,'Ganho']];for(const [nome,contato,valor,etapa] of exemplos)negocios.push({id:String(Date.now())+'-'+Math.random(),nome,contato,valor,etapa});salvar();render()});$('limpar').addEventListener('click',()=>{if(confirm('Apagar todos os dados de teste deste navegador?')){negocios=[];salvar();render()}});render();
-</script></body></html>
+const $ = id => document.getElementById(id);
+let cliente;
+let usuario;
 
+function mensagem(texto) {
+  $('mensagem').textContent = texto;
+}
+
+function moeda(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+}
+
+async function iniciar() {
+  if (!window.supabase ||
+      !window.SUPABASE_URL ||
+      !window.SUPABASE_PUBLISHABLE_KEY) {
+    mensagem('Configuração do Supabase não encontrada.');
+    return;
+  }
+
+  cliente = window.supabase.createClient(
+    window.SUPABASE_URL,
+    window.SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const {data, error} = await cliente.auth.getUser();
+
+  if (error || !data.user) {
+    $('usuario').textContent = 'Você precisa entrar na sua conta.';
+    const link = document.createElement('a');
+    link.href = 'cadastro.html';
+    link.textContent = 'Fazer login';
+    $('usuario').append(' ', link);
+    return;
+  }
+
+  usuario = data.user;
+  $('usuario').textContent = usuario.email;
+  $('salvar').disabled = false;
+  mensagem('Conectado ao Supabase!');
+  await carregar();
+}
+
+async function carregar() {
+  const {data, error} = await cliente
+    .from('negociacoes')
+    .select('id,nome,contato,valor,etapa')
+    .eq('user_id', usuario.id)
+    .order('id', {ascending:false});
+
+  if (error) {
+    mensagem('Erro ao carregar: ' + error.message);
+    return;
+  }
+
+  const lista = $('lista');
+  lista.replaceChildren();
+  $('total').textContent = data.length;
+
+  for (const item of data) {
+    const tr = document.createElement('tr');
+
+    for (const valor of [
+      item.nome,
+      item.contato || '-',
+      moeda(item.valor),
+      item.etapa
+    ]) {
+      const td = document.createElement('td');
+      td.textContent = valor;
+      tr.appendChild(td);
+    }
+
+    const td = document.createElement('td');
+    const botao = document.createElement('button');
+    botao.textContent = 'Excluir';
+    botao.className = 'excluir';
+
+    botao.onclick = async () => {
+      if (!confirm('Excluir esta negociação?')) return;
+
+      botao.disabled = true;
+
+      const {error} = await cliente
+        .from('negociacoes')
+        .delete()
+        .eq('id', item.id)
+        .eq('user_id', usuario.id);
+
+      if (error) {
+        mensagem('Erro ao excluir: ' + error.message);
+      } else {
+        mensagem('Negociação excluída.');
+      }
+
+      await carregar();
+    };
+
+    td.appendChild(botao);
+    tr.appendChild(td);
+    lista.appendChild(tr);
+  }
+}
+
+$('form').onsubmit = async evento => {
+  evento.preventDefault();
+  if (!usuario) return;
+
+  $('salvar').disabled = true;
+  mensagem('Salvando...');
+
+  const dados = {
+    user_id: usuario.id,
+    nome: $('nome').value.trim(),
+    contato: $('contato').value.trim(),
+    valor: Number($('valor').value),
+    etapa: $('etapa').value
+  };
+
+  const {error} = await cliente
+    .from('negociacoes')
+    .insert(dados);
+
+  if (error) {
+    mensagem('Erro ao salvar: ' + error.message);
+  } else {
+    mensagem('Negociação salva no Supabase!');
+    $('form').reset();
+    await carregar();
+  }
+
+  $('salvar').disabled = false;
+};
+
+iniciar().catch(erro => {
+  mensagem('Erro de conexão: ' + erro.message);
+});
+</script>
+</body>
+</html>
