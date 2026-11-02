@@ -74,7 +74,32 @@
           const { data, error } = await cliente.auth.getUser();
           if (error || !data.user) throw error || new Error('Sessão não encontrada.');
           mostrarUsuario(data.user);
-        } catch (erro) {
+          const { data: negocios, error: erroNegocios } = await cliente
+  .from('negociacoes')
+  .select('valor, etapa')
+  .eq('user_id', data.user.id);
+
+if (erroNegocios) {
+  alert('Erro ao carregar dashboard: ' + erroNegocios.message);
+} else {
+  const total = negocios.length;
+  const valorTotal = negocios.reduce(
+    (soma, negocio) => soma + (Number(negocio.valor) || 0), 0
+  );
+  const ganhas = negocios.filter(
+    negocio => negocio.etapa === 'Ganho'
+  ).length;
+
+  document.getElementById('totalNegociacoes').textContent = total;
+  document.getElementById('valorTotal').textContent =
+    valorTotal.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  document.getElementById('vendasGanhas').textContent = ganhas;
+}
+          
+           } catch (erro) {
           statusEl.textContent = 'Não foi possível confirmar o login: ' + erro.message + ' ';
           const link = document.createElement('a');
           link.href = 'cadastro.html';
