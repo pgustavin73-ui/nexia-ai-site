@@ -27,6 +27,26 @@
     a { color: #70c4ff; }
     button { padding: 12px; border: none; border-radius: 8px; cursor: pointer; }
     #status { padding: 20px; }
+    .indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.indicador {
+  background: #1d3050;
+  border: 1px solid #40577d;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.indicador strong {
+  display: block;
+  font-size: 24px;
+  color: #70c4ff;
+  margin-top: 10px;
+}
   </style>
 </head>
 <body>
@@ -37,13 +57,26 @@
     <div class="card">
   <h2>📊 Dashboard de Vendas</h2>
       <h3>📈 Funil de Vendas</h3>
-<div id="graficoFunil"></div>
-  <p>Total de negociações: <strong id="totalNegociacoes">0</strong></p>
+<div id="graficoFunil"></div> 
+<div class="indicadores">
+<div class="indicador">
+  
+      <p>Total de negociações: <strong id="totalNegociacoes">0</strong></p>
+  
+</div>
+  <div class="indicador">
   <p>Valor das negociações: <strong id="valorTotal">R$ 0,00</strong></p>
+  </div>
+  <div class="indicador">
+  
   <p>Vendas ganhas: <strong id="vendasGanhas">0</strong></p>
+  </div>
+  <div class="indicador">
       <p>Faturamento: <strong id="faturamento">R$ 0,00</strong></p>
     </div>
-    <div class="card">
+    </div>
+    </div>
+      <div class="card">
   <h2>CRM de Vendas</h2>
   <p>Gerencie seus clientes e oportunidades.</p>
   <a href="crm.html">
