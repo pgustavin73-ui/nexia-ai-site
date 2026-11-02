@@ -17,7 +17,7 @@
 <script>
   'use strict';
   const KEY='nexia-crm-demo-v1';let negocios=[];
-const KEY='nexia-crm-demo-v1';let negocios=[];
+
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(saved))negocios=saved.filter(x=>x&&typeof x.nome==='string'&&typeof x.id==='string');}catch(e){}
 const $=id=>document.getElementById(id);const moeda=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});const etapas=['Novo lead','Em contato','Proposta','Ganho','Perdido'];
 function salvar(){try{localStorage.setItem(KEY,JSON.stringify(negocios))}catch(e){alert('Não foi possível salvar neste navegador.')}}
