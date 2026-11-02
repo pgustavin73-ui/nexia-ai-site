@@ -100,6 +100,15 @@ if (erroNegocios) {
       currency: 'BRL'
     });
   document.getElementById('vendasGanhas').textContent = ganhas;
+  const faturamento = negocios
+  .filter(negocio => negocio.etapa === 'Ganho')
+  .reduce((soma, negocio) => soma + (Number(negocio.valor) || 0), 0);
+
+document.getElementById('faturamento').textContent =
+  faturamento.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
   const etapas = ['Novo lead', 'Em contato', 'Proposta', 'Negociação', 'Ganho', 'Perdido'];
 const grafico = document.getElementById('graficoFunil');
 grafico.innerHTML = '';
