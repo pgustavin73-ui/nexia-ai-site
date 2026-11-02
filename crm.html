@@ -210,7 +210,52 @@ function atualizarFunil(negociacoes) {
     }
 
    
-const editar = document.createElement('button');
+
+const mudarEtapa = document.createElement('button');
+mudarEtapa.textContent = 'Alterar etapa';
+mudarEtapa.style.marginRight = '8px';
+
+mudarEtapa.onclick = async () => {
+  const etapas = [
+    'Novo lead',
+    'Em contato',
+    'Proposta',
+    'Negociação',
+    'Ganho',
+    'Perdido'
+  ];
+
+  const escolha = prompt(
+    etapas.map((etapa, i) => `${i + 1} - ${etapa}`).join('\n') +
+    '\n\nDigite o número da nova etapa:'
+  );
+
+  if (escolha === null) return;
+
+  const numero = Number(escolha);
+  if (!Number.isInteger(numero) || numero < 1 || numero > 6) {
+    alert('Escolha um número de 1 a 6.');
+    return;
+  }
+
+  mudarEtapa.disabled = true;
+
+  const { error } = await cliente
+    .from('negociacoes')
+    .update({ etapa: etapas[numero - 1] })
+    .eq('id', item.id)
+    .eq('user_id', usuario.id);
+
+  if (error) {
+    mensagem('Erro ao alterar etapa: ' + error.message);
+    mudarEtapa.disabled = false;
+  } else {
+    mensagem('Etapa atualizada!');
+    await carregar();
+  }
+};
+    
+    const editar = document.createElement('button');
 editar.textContent = 'Editar';
 editar.style.marginRight = '8px';
 
@@ -278,6 +323,7 @@ editar.onclick = async () => {
       await carregar();
     };
 
+    td.appendChild(mudarEtapa);
     td.appendChild(editar);
     td.appendChild(botao);
     tr.appendChild(td);
