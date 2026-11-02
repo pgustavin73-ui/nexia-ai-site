@@ -78,6 +78,10 @@
     </div>
     </div>
       <div class="card">
+  <h2>📊 Faturamento mensal</h2>
+  <div id="graficoMensal"></div>
+      </div>
+    <div class="card">
   <h2>CRM de Vendas</h2>
   <p>Gerencie seus clientes e oportunidades.</p>
   <a href="crm.html">
@@ -127,7 +131,7 @@
           mostrarUsuario(data.user);
           const { data: negocios, error: erroNegocios } = await cliente
   .from('negociacoes')
-  .select('valor, etapa')
+  .select('valor, etapa, created_at')
   .eq('user_id', data.user.id);
 
 if (erroNegocios) {
@@ -159,6 +163,46 @@ document.getElementById('faturamento').textContent =
     style: 'currency',
     currency: 'BRL'
   });
+  const meses = {};
+
+negocios
+  .filter(n => n.etapa === 'Ganho' && n.created_at)
+  .forEach(n => {
+    const mes = n.created_at.slice(0, 7);
+    meses[mes] = (meses[mes] || 0) + (Number(n.valor) || 0);
+  });
+
+const graficoMensal = document.getElementById('graficoMensal');
+graficoMensal.innerHTML = '';
+
+const maiorValor = Math.max(1, ...Object.values(meses));
+
+Object.keys(meses).sort().forEach(mes => {
+  const valor = meses[mes];
+  const linha = document.createElement('div');
+  linha.style.marginBottom = '16px';
+
+  const titulo = document.createElement('p');
+  const [ano, numeroMes] = mes.split('-');
+  titulo.textContent = `${numeroMes}/${ano} — ${valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  })}`;
+
+  const barra = document.createElement('div');
+  barra.style.height = '22px';
+  barra.style.borderRadius = '8px';
+  barra.style.background = '#70c4ff';
+  barra.style.width = `${(valor / maiorValor) * 100}%`;
+
+  linha.appendChild(titulo);
+  linha.appendChild(barra);
+  graficoMensal.appendChild(linha);
+});
+
+if (Object.keys(meses).length === 0) {
+  graficoMensal.textContent = 'Nenhuma venda ganha registrada.';
+  }
   const etapas = ['Novo lead', 'Em contato', 'Proposta', 'Negociação', 'Ganho', 'Perdido'];
 const grafico = document.getElementById('graficoFunil');
 grafico.innerHTML = '';
