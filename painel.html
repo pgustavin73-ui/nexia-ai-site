@@ -140,7 +140,9 @@ if (erroNegocios) {
   const ganhas = negocios.filter(
     negocio => negocio.etapa === 'Ganho'
   ).length;
-
+const taxaConversao = total > 0 ? (ganhas / total) * 100 : 0;
+document.getElementById('taxaConversao').textContent =
+  taxaConversao.toFixed(1).replace('.', ',') + '%';
   document.getElementById('totalNegociacoes').textContent = total;
   document.getElementById('valorTotal').textContent =
     valorTotal.toLocaleString('pt-BR', {
