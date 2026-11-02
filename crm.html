@@ -64,6 +64,13 @@ td,th{padding:12px;border-bottom:1px solid #303c58;text-align:left}
 </section>
 
 <section>
+  <h2>Funil de Vendas</h2>
+  <div id="funil" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+  </div>
+</section>
+  
+
+  <section>
 <h2>Minhas negociações</h2>
 <p>Total: <strong id="total">0</strong></p>
 <div class="tabela">
@@ -134,7 +141,44 @@ async function iniciar() {
   await carregar();
 }
 
-async function carregar() {
+
+function atualizarFunil(negociacoes) {
+  const etapas = [
+    'Novo lead',
+    'Em contato',
+    'Proposta',
+    'Negociação',
+    'Ganho',
+    'Perdido'
+  ];
+
+  const funil = document.getElementById('funil');
+  if (!funil) return;
+
+  funil.replaceChildren();
+
+  for (const etapa of etapas) {
+    const quantidade = negociacoes.filter(
+      item => item.etapa === etapa
+    ).length;
+
+    const card = document.createElement('div');
+    card.style.cssText =
+      'background:#0b1324;padding:15px;border-radius:10px;text-align:center';
+
+    const titulo = document.createElement('strong');
+    titulo.textContent = etapa;
+
+    const numero = document.createElement('h2');
+    numero.textContent = quantidade;
+    numero.style.color = '#a58bff';
+
+    card.append(titulo, numero);
+    funil.appendChild(card);
+  }
+}
+  
+  async function carregar() {
   const {data, error} = await cliente
     .from('negociacoes')
     .select('id,nome,contato,valor,etapa')
@@ -149,6 +193,7 @@ async function carregar() {
   const lista = $('lista');
   lista.replaceChildren();
   $('total').textContent = data.length;
+    atualizarFunil(data);
 
   for (const item of data) {
     const tr = document.createElement('tr');
