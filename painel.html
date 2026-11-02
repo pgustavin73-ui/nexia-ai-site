@@ -99,6 +99,28 @@ if (erroNegocios) {
       currency: 'BRL'
     });
   document.getElementById('vendasGanhas').textContent = ganhas;
+  const etapas = ['Novo lead', 'Em contato', 'Proposta', 'Negociação', 'Ganho', 'Perdido'];
+const grafico = document.getElementById('graficoFunil');
+grafico.innerHTML = '';
+
+etapas.forEach(etapa => {
+  const quantidade = negocios.filter(n => n.etapa === etapa).length;
+  const linha = document.createElement('div');
+  linha.style.marginBottom = '14px';
+
+  const titulo = document.createElement('p');
+  titulo.textContent = `${etapa}: ${quantidade}`;
+
+  const barra = document.createElement('div');
+  barra.style.height = '16px';
+  barra.style.borderRadius = '8px';
+  barra.style.background = '#70c4ff';
+  barra.style.width = `${total ? (quantidade / total) * 100 : 0}%`;
+
+  linha.appendChild(titulo);
+  linha.appendChild(barra);
+  grafico.appendChild(linha);
+});
 }
           
            } catch (erro) {
