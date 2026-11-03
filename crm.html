@@ -196,15 +196,27 @@ function atualizarFunil(negociacoes) {
 }
   let todosClientes = [];
 
+
 function filtrarClientes() {
   const pesquisa = $('pesquisaClientes').value.toLowerCase();
+  const etapa = $('filtroEtapa').value;
 
-  document.querySelectorAll('#lista tr').forEach((linha) => {
+  document.querySelectorAll('#lista tr').forEach((linha, i) => {
     const texto = linha.textContent.toLowerCase();
-    linha.style.display = texto.includes(pesquisa) ? '' : 'none';
+    const etapaCliente = todosClientes[i]?.etapa;
+
+    linha.style.display =
+      texto.includes(pesquisa) &&
+      (!etapa || etapaCliente === etapa)
+        ? ''
+        : 'none';
   });
 }
+  
   $('pesquisaClientes').addEventListener('input', filtrarClientes);
+  
+$('filtroEtapa').addEventListener('change', filtrarClientes);
+  
   async function carregar() {
     
   const {data, error} = await cliente
