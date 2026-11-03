@@ -259,7 +259,10 @@ Object.keys(meses).sort().forEach(mes => {
   const barra = document.createElement('div');
   barra.style.height = '22px';
   barra.style.borderRadius = '8px';
-  barra.style.background = '#70c4ff';
+  
+barra.classList.add('barra');
+  
+  
   barra.style.width = `${(valor / maiorValor) * 100}%`;
 
   linha.appendChild(titulo);
