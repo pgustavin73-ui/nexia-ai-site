@@ -211,8 +211,14 @@ function filtrarClientes() {
         ? ''
         : 'none';
   });
-}
   
+const visiveis = document.querySelectorAll(
+  '#lista tr:not([style*="display: none"])'
+).length;
+
+$('total').textContent = visiveis;
+  
+}
   $('pesquisaClientes').addEventListener('input', filtrarClientes);
   
 $('filtroEtapa').addEventListener('change', filtrarClientes);
