@@ -217,6 +217,22 @@ const visiveis = document.querySelectorAll(
 ).length;
 
 $('total').textContent = visiveis;
+
+let aviso = document.getElementById('avisoVazio');
+
+if (!aviso) {
+  aviso = document.createElement('p');
+  aviso.id = 'avisoVazio';
+  aviso.style.textAlign = 'center';
+  aviso.style.padding = '20px';
+  aviso.style.color = '#a58bff';
+  document.getElementById('lista')
+    .closest('table')
+    .after(aviso);
+}
+
+aviso.textContent = 'Nenhuma negociação encontrada.';
+aviso.style.display = visiveis === 0 ? 'block' : 'none';
   
 }
   $('pesquisaClientes').addEventListener('input', filtrarClientes);
