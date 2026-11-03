@@ -78,7 +78,18 @@ td,th{padding:12px;border-bottom:1px solid #303c58;text-align:left}
   placeholder="🔍 Pesquisar cliente ou empresa..."
   style="width:100%;padding:12px;margin:10px 0;"
 >
-<p>Total: <strong id="total">0</strong></p>
+
+<select id="filtroEtapa">
+  <option value="">Todas as etapas</option>
+  <option value="Novo lead">Novo lead</option>
+  <option value="Em contato">Em contato</option>
+  <option value="Proposta">Proposta</option>
+  <option value="Negociação">Negociação</option>
+  <option value="Ganho">Ganho</option>
+  <option value="Perdido">Perdido</option>
+</select>
+    
+    <p>Total: <strong id="total">0</strong></p>
 <div class="tabela">
 <table>
 <thead>
