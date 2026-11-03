@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assistente de IA | NEXIA AI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #090e1b;
+      color: white;
+    }
+    header {
+      padding: 20px;
+      background: #151d32;
+      color: #a78bfa;
+      font-size: 23px;
+      font-weight: bold;
+    }
+    main {
+      max-width: 850px;
+      margin: 20px auto;
+      padding: 16px;
+    }
+    #conversa {
+      height: 55vh;
+      overflow-y: auto;
+      padding: 18px;
+      background: #151d32;
+      border-radius: 16px;
+    }
+    .mensagem {
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      overflow-wrap: anywhere;
+    }
+    .ia { background: #29334d; }
+    .usuario { background: #6042aa; }
+    form {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid #465273;
+      border-radius: 10px;
+      background: #151d32;
+      color: white;
+    }
+    button {
+      background: #9567f7;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>🤖 NEXIA AI</header>
+  <main>
+    <h2>Assistente Inteligente</h2>
+    <div id="conversa" aria-live="polite">
+      <div class="mensagem ia">
+        Olá! Sou o assistente da NEXIA AI.
+        Como posso ajudar?
+      </div>
+    </div>
+    <form id="formChat">
+      <input id="pergunta"
+        placeholder="Digite sua mensagem..."
+        aria-label="Sua mensagem"
+        required>
+      <button type="submit">Enviar</button>
+    </form>
+  </main>
+  <script>
+    document.getElementById('formChat')
+      .addEventListener('submit', function(e) {
+        e.preventDefault();
+        const campo = document.getElementById('pergunta');
+        const texto = campo.value.trim();
+        if (!texto) return;
+
+        const mensagem = document.createElement('div');
+        mensagem.className = 'mensagem usuario';
+        mensagem.textContent = texto;
+
+        const conversa = document.getElementById('conversa');
+        conversa.appendChild(mensagem);
+        conversa.scrollTop = conversa.scrollHeight;
+        campo.value = '';
+      });
+  </script>
+</body>
+</html>
