@@ -116,7 +116,49 @@ button {
   border-radius: 10px;
   min-height: 16px;
 }
-    
+   #menuLateral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  max-width: 85vw;
+  height: 100vh;
+  background: #15152b;
+  border-right: 1px solid #7c3aed;
+  padding: 24px;
+  z-index: 1000;
+  box-shadow: 4px 0 25px #0008;
+  overflow-y: auto;
+}
+
+#menuLateral[hidden] {
+  display: none;
+}
+
+#menuLateral h2 {
+  color: #c4a5ff;
+  margin-bottom: 30px;
+}
+
+#menuLateral a {
+  display: block;
+  color: white;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+#menuLateral a:hover {
+  background: #7c3aed;
+}
+
+#botaoMenu {
+  margin-right: 15px;
+  background: #7c3aed;
+  color: white;
+  font-size: 22px;
+  } 
   </style>
   
 </head>
@@ -380,6 +422,12 @@ etapas.forEach(etapa => {
       });
       iniciar();
     }
+const botaoMenu = document.getElementById('botaoMenu');
+const menuLateral = document.getElementById('menuLateral');
+
+botaoMenu.addEventListener('click', () => {
+  menuLateral.hidden = !menuLateral.hidden;
+});
   </script>
 </body>
 </html>
