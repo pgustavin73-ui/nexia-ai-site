@@ -523,6 +523,10 @@ botaoNotificacoes.addEventListener('click', () => {
 const contador = document.getElementById('contadorNotificacoes');
 const botoesLida = document.querySelectorAll('.marcarLida');
 
+const notificacoesLidas = JSON.parse(
+  localStorage.getItem('nexiaNotificacoesLidas') || '[]'
+);
+    
 botoesLida.forEach(botao => {
   botao.addEventListener('click', () => {
     if (botao.disabled) return;
