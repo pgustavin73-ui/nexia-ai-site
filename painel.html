@@ -515,6 +515,22 @@ const caixaNotificacoes = document.getElementById('caixaNotificacoes');
 botaoNotificacoes.addEventListener('click', () => {
   caixaNotificacoes.hidden = !caixaNotificacoes.hidden;
 });
+  
+const contador = document.getElementById('contadorNotificacoes');
+const botoesLida = document.querySelectorAll('.marcarLida');
+
+botoesLida.forEach(botao => {
+  botao.addEventListener('click', () => {
+    if (botao.disabled) return;
+
+    botao.disabled = true;
+    botao.textContent = '✓ Lida';
+
+    const total = [...botoesLida].filter(b => !b.disabled).length;
+    contador.textContent = total;
+    contador.hidden = total === 0;
+  });
+});
     
   </script>
 </body>
