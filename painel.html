@@ -520,7 +520,56 @@ botaoNotificacoes.addEventListener('click', () => {
   caixaNotificacoes.hidden = !caixaNotificacoes.hidden;
 });
   
+
 const contador = document.getElementById('contadorNotificacoes');
+const botoesLida = document.querySelectorAll('.marcarLida');
+
+const chaveNotificacoes = 'nexiaNotificacoesLidas';
+let notificacoesLidas = [];
+
+try {
+  const salvas = JSON.parse(localStorage.getItem(chaveNotificacoes) || '[]');
+  if (Array.isArray(salvas)) notificacoesLidas = salvas;
+} catch (erro) {
+  console.warn('Erro ao carregar notificações:', erro);
+}
+
+function atualizarContador() {
+  const total = [...botoesLida].filter(botao => !botao.disabled).length;
+  contador.textContent = total;
+  contador.hidden = total === 0;
+}
+
+botoesLida.forEach((botao, indice) => {
+  if (notificacoesLidas.includes(indice)) {
+    botao.disabled = true;
+    botao.textContent = '✓ Lida';
+  }
+
+  botao.addEventListener('click', () => {
+    if (botao.disabled) return;
+
+    botao.disabled = true;
+    botao.textContent = '✓ Lida';
+
+    if (!notificacoesLidas.includes(indice)) {
+      notificacoesLidas.push(indice);
+      try {
+        localStorage.setItem(
+          chaveNotificacoes,
+          JSON.stringify(notificacoesLidas)
+        );
+      } catch (erro) {
+        console.warn('Erro ao salvar notificações:', erro);
+      }
+    }
+
+    atualizarContador();
+  });
+});
+
+atualizarContador();
+    
 const botoesLida = document.querySelectorAll('.marcarLida');
 
 const notificacoesLidas = JSON.parse(
