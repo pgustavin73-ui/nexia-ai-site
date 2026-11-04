@@ -529,6 +529,12 @@ const notificacoesLidas = JSON.parse(
     
 
 botoesLida.forEach((botao, indice) => { 
+  
+if (notificacoesLidas.includes(indice)) {
+  botao.disabled = true;
+  botao.textContent = '✓ Lida';
+}
+  
   botao.addEventListener('click', () => {
     if (botao.disabled) return;
 
