@@ -129,7 +129,8 @@ button {
   z-index: 1000;
   box-shadow: 4px 0 25px #0008;
   overflow-y: auto;
-}
+  animation: abrirMenu 0.3s ease-out;
+   }
 
 #menuLateral[hidden] {
   display: none;
@@ -159,6 +160,16 @@ button {
   color: white;
   font-size: 22px;
   } 
+  @keyframes abrirMenu {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  }
   </style>
   
 </head>
