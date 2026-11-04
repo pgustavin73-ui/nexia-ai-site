@@ -98,6 +98,12 @@
         conversa.appendChild(mensagem);
         conversa.scrollTop = conversa.scrollHeight;
         campo.value = '';
+        
+const resposta = document.createElement('div');
+resposta.className = 'mensagem ia';
+resposta.textContent = 'Olá! Sou a NEXIA AI. Como posso ajudar você?';
+conversar.appendChild(resposta);
+        
       });
   </script>
 </body>
