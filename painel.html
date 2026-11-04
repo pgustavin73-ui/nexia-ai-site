@@ -168,7 +168,8 @@ button {
   NEXIA AI
   </header>
   <nav id="menuLateral" aria-label="Menu principal" hidden>
-  <h2>🚀 NEXIA AI</h2>
+  <button type="button" id="fecharMenu">✕ Fechar</button>
+    <h2>🚀 NEXIA AI</h2>
   <a href="painel.html">📊 Dashboard</a>
   <a href="crm.html">👥 CRM de Vendas</a>
   <a href="bate-papo.html">🤖 Assistente de IA</a>
@@ -427,6 +428,9 @@ const menuLateral = document.getElementById('menuLateral');
 
 botaoMenu.addEventListener('click', () => {
   menuLateral.hidden = !menuLateral.hidden;
+});
+  document.getElementById('fecharMenu').addEventListener('click', () => {
+  menuLateral.hidden = true;
 });
   </script>
 </body>
