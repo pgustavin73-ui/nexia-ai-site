@@ -83,7 +83,7 @@
   </main>
   <script>
     document.getElementById('formChat')
-      .addEventListener('submit', function(e) {
+      .addEventListener('submit', async function(e) {
         e.preventDefault();
         const campo = document.getElementById('pergunta');
         const texto = campo.value.trim();
@@ -98,10 +98,30 @@
         conversa.scrollTop = conversa.scrollHeight;
         campo.value = '';
         
+
 const resposta = document.createElement('div');
 resposta.className = 'mensagem ia';
-resposta.textContent = 'Olá! Sou a NEXIA AI. Como posso ajudar você?';
+resposta.textContent = 'Pensando...';
 conversa.appendChild(resposta);
+
+try {
+  const pedido = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mensagem: texto })
+  });
+
+  const dados = await pedido.json();
+
+  if (!pedido.ok) {
+    throw new Error(dados.error || 'Erro na IA');
+  }
+
+  resposta.textContent = dados.resposta;
+} catch (erro) {
+  resposta.textContent = 'Não foi possível responder agora.';
+}
+conversa.scrollTop = conversa.scrollHeight;
         
       });
   </script>
