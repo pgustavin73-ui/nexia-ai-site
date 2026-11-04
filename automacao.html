@@ -74,7 +74,25 @@ button:hover, .botao:hover {
   <div class="card">
     <h3>👥 Automação de clientes</h3>
     <p>Organize tarefas relacionadas ao CRM.</p>
-    <button disabled>Em desenvolvimento</button>
+<button type="button" id="btnClientes">Configurar clientes</button>
+    
+<div id="painelClientes" hidden>
+  <h3>Configurar cliente</h3>
+
+  <input type="text" id="nomeCliente"
+    placeholder="Nome do cliente">
+
+  <textarea id="tarefaCliente"
+    placeholder="Digite a tarefa para o cliente..."
+    rows="4"></textarea>
+
+  <button type="button" id="salvarCliente">
+    Salvar tarefa
+  </button>
+
+  <p id="statusCliente"></p>
+</div>
+    
   </div>
 
   <div class="card">
@@ -108,6 +126,36 @@ document.getElementById('salvarMensagem').addEventListener('click', () => {
   localStorage.setItem('nexiaMensagem', texto);
   statusMensagem.textContent = '✅ Mensagem salva com sucesso!';
 });
+  
+const botaoClientes = document.getElementById('btnClientes');
+const painelClientes = document.getElementById('painelClientes');
+
+botaoClientes.addEventListener('click', () => {
+  painelClientes.hidden = !painelClientes.hidden;
+});
+  
+const nomeCliente = document.getElementById('nomeCliente');
+const tarefaCliente = document.getElementById('tarefaCliente');
+const statusCliente = document.getElementById('statusCliente');
+
+nomeCliente.value = localStorage.getItem('nexiaNomeCliente') || '';
+tarefaCliente.value = localStorage.getItem('nexiaTarefaCliente') || '';
+
+document.getElementById('salvarCliente').addEventListener('click', () => {
+  const nome = nomeCliente.value.trim();
+  const tarefa = tarefaCliente.value.trim();
+
+  if (!nome || !tarefa) {
+    statusCliente.textContent = 'Preencha os dois campos.';
+    return;
+  }
+
+  localStorage.setItem('nexiaNomeCliente', nome);
+  localStorage.setItem('nexiaTarefaCliente', tarefa);
+
+  statusCliente.textContent = '✅ Tarefa salva com sucesso!';
+});
+  
   
 </script>
   
