@@ -535,7 +535,14 @@ if (notificacoesLidas.includes(indice)) {
   botao.textContent = '✓ Lida';
 }
   
+notificacoesLidas.push(indice);
+
+  
   botao.addEventListener('click', () => {
+    
+notificacoesLidas.push(indice);
+localStorage.setItem('nexiaNotificacoesLidas', JSON.stringify(notificacoesLidas));
+    
     if (botao.disabled) return;
 
     botao.disabled = true;
