@@ -570,36 +570,6 @@ botoesLida.forEach((botao, indice) => {
 
 atualizarContador();
     
-const botoesLida = document.querySelectorAll('.marcarLida');
-
-const notificacoesLidas = JSON.parse(
-  localStorage.getItem('nexiaNotificacoesLidas') || '[]'
-);
-    
-
-botoesLida.forEach((botao, indice) => { 
-  
-if (notificacoesLidas.includes(indice)) {
-  botao.disabled = true;
-  botao.textContent = '✓ Lida';
-}
-
-  
-  botao.addEventListener('click', () => {
-    
-notificacoesLidas.push(indice);
-localStorage.setItem('nexiaNotificacoesLidas', JSON.stringify(notificacoesLidas));
-    
-    if (botao.disabled) return;
-
-    botao.disabled = true;
-    botao.textContent = '✓ Lida';
-
-    const total = [...botoesLida].filter(b => !b.disabled).length;
-    contador.textContent = total;
-    contador.hidden = total === 0;
-  });
-});
     
   </script>
 </body>
