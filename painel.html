@@ -337,7 +337,7 @@ grafico.innerHTML = '';
 etapas.forEach(etapa => {
   const quantidade = negocios.filter(n => n.etapa === etapa).length;
   const linha = document.createElement('div');
-  linha.style.marginBottom = '14px';
+  linha.style.marginBottom = '6px';
 
   const titulo = document.createElement('p');
   titulo.textContent = `${etapa}: ${quantidade}`;
