@@ -98,7 +98,24 @@ button:hover, .botao:hover {
   <div class="card">
     <h3>⏰ Lembretes automáticos</h3>
     <p>Gerencie lembretes e atividades.</p>
-    <button disabled>Em desenvolvimento</button>
+<button type="button" id="btnLembretes">Configurar lembretes</button>
+    
+<div id="painelLembretes" hidden>
+  <h3>Criar lembrete</h3>
+
+  <input type="text" id="tituloLembrete"
+    placeholder="Nome do lembrete">
+
+  <input type="datetime-local"
+    id="dataLembrete">
+
+  <button type="button" id="salvarLembrete">
+    Salvar lembrete
+  </button>
+
+  <p id="statusLembrete"></p>
+</div>
+    
   </div>
 </main>
 
@@ -154,6 +171,42 @@ document.getElementById('salvarCliente').addEventListener('click', () => {
   localStorage.setItem('nexiaTarefaCliente', tarefa);
 
   statusCliente.textContent = '✅ Tarefa salva com sucesso!';
+});
+  
+const botaoLembretes = document.getElementById('btnLembretes');
+const painelLembretes = document.getElementById('painelLembretes');
+
+botaoLembretes.addEventListener('click', () => {
+  painelLembretes.hidden = !painelLembretes.hidden;
+});
+  
+const tituloLembrete = document.getElementById('tituloLembrete');
+const dataLembrete = document.getElementById('dataLembrete');
+const statusLembrete = document.getElementById('statusLembrete');
+
+const lembreteSalvo = JSON.parse(
+  localStorage.getItem('nexiaLembrete') || 'null'
+);
+
+if (lembreteSalvo) {
+  tituloLembrete.value = lembreteSalvo.titulo;
+  dataLembrete.value = lembreteSalvo.data;
+}
+
+document.getElementById('salvarLembrete').addEventListener('click', () => {
+  const titulo = tituloLembrete.value.trim();
+  const data = dataLembrete.value;
+
+  if (!titulo || !data) {
+    statusLembrete.textContent = 'Preencha todos os campos.';
+    return;
+  }
+
+  localStorage.setItem('nexiaLembrete',
+    JSON.stringify({ titulo, data })
+  );
+
+  statusLembrete.textContent = '✅ Lembrete salvo com sucesso!';
 });
   
   
