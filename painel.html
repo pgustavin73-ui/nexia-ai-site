@@ -465,6 +465,14 @@ botaoMenu.addEventListener('click', () => {
   document.getElementById('fecharMenu').addEventListener('click', () => {
   menuLateral.hidden = true;
 });
+    
+const botaoNotificacoes = document.getElementById('botaoNotificacoes');
+const caixaNotificacoes = document.getElementById('caixaNotificacoes');
+
+botaoNotificacoes.addEventListener('click', () => {
+  caixaNotificacoes.hidden = !caixaNotificacoes.hidden;
+});
+    
   </script>
 </body>
 </html>
