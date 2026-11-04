@@ -544,6 +544,9 @@ botoesLida.forEach((botao, indice) => {
   if (notificacoesLidas.includes(indice)) {
     botao.disabled = true;
     botao.textContent = '✓ Lida';
+    
+botao.parentElement.hidden = true;
+    
   }
 
   botao.addEventListener('click', () => {
