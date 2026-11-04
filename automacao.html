@@ -58,7 +58,17 @@ button:hover, .botao:hover {
   <div class="card">
     <h3>📩 Automação de mensagens</h3>
     <p>Prepare mensagens automáticas para clientes.</p>
-    <button disabled>Em desenvolvimento</button>
+    <button type="button" id="btnMensagens">Configurar mensagens</button>
+    <div id="painelMensagens" hidden>
+  <h3>Configurar mensagem</h3>
+  <textarea id="textoMensagem"
+    placeholder="Digite sua mensagem..."
+    rows="4"></textarea>
+  <button type="button" id="salvarMensagem">
+    Salvar mensagem
+  </button>
+  <p id="statusMensagem"></p>
+    </div>
   </div>
 
   <div class="card">
@@ -73,6 +83,34 @@ button:hover, .botao:hover {
     <button disabled>Em desenvolvimento</button>
   </div>
 </main>
+
+<script>
+const botaoMensagens = document.getElementById('btnMensagens');
+const painelMensagens = document.getElementById('painelMensagens');
+
+botaoMensagens.addEventListener('click', () => {
+  painelMensagens.hidden = !painelMensagens.hidden;
+});
+
+const campoMensagem = document.getElementById('textoMensagem');
+const statusMensagem = document.getElementById('statusMensagem');
+
+campoMensagem.value = localStorage.getItem('nexiaMensagem') || '';
+
+document.getElementById('salvarMensagem').addEventListener('click', () => {
+  const texto = campoMensagem.value.trim();
+
+  if (!texto) {
+    statusMensagem.textContent = 'Digite uma mensagem primeiro.';
+    return;
+  }
+
+  localStorage.setItem('nexiaMensagem', texto);
+  statusMensagem.textContent = '✅ Mensagem salva com sucesso!';
+});
+  
+</script>
+  
 </body>
 </html>
 
