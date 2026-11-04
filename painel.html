@@ -557,7 +557,10 @@ botao.previousElementSibling.hidden = true;
     botao.disabled = true;
     botao.textContent = '✓ Lida';
     
-botao.parentElement.hidden = true;
+
+botao.hidden = true;
+botao.previousElementSibling.hidden = true;
+    
     
 
     if (!notificacoesLidas.includes(indice)) {
