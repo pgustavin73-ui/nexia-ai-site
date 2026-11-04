@@ -527,7 +527,8 @@ const notificacoesLidas = JSON.parse(
   localStorage.getItem('nexiaNotificacoesLidas') || '[]'
 );
     
-botoesLida.forEach(botao => {
+
+botoesLida.forEach((botao, indice) => { 
   botao.addEventListener('click', () => {
     if (botao.disabled) return;
 
