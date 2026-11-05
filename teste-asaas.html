@@ -172,6 +172,92 @@ document.getElementById("testar")
         "Erro: " + erro.message;
     }
   });
+  
+document.querySelectorAll(".criarCheckout")
+  .forEach(botao => {
+    botao.addEventListener("click", async () => {
+      const plano = botao.dataset.plano;
+      botao.disabled = true;
+
+      resultado.textContent =
+        "Criando link de teste...";
+
+      try {
+        if (!cliente) {
+          throw new Error("Login não configurado");
+        }
+
+        const { data, error } =
+          await cliente.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          throw new Error(
+            "Entre com Google primeiro"
+          );
+        }
+
+        const resposta = await fetch(
+          "/api/checkout-teste",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+                "Bearer " +
+                data.session.access_token
+            },
+            body: JSON.stringify({ plano })
+          }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.ok) {
+          throw new Error(
+            dados.mensagem || "Falha no teste"
+          );
+        }
+
+        resultado.textContent =
+          "✅ " + dados.mensagem;
+
+        if (dados.link) {
+          const url = new URL(dados.link);
+
+          if (
+            url.protocol !== "https:" ||
+            !(
+              url.hostname === "asaas.com" ||
+              url.hostname.endsWith(".asaas.com")
+            )
+          ) {
+            throw new Error("Link inesperado");
+          }
+
+          const link = document.createElement("a");
+          link.href = url.href;
+          link.textContent =
+            "Abrir checkout de teste";
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+
+          resultado.appendChild(
+            document.createElement("br")
+          );
+          resultado.appendChild(link);
+        }
+
+      } catch (erro) {
+        resultado.textContent =
+          "❌ " + erro.message;
+      } finally {
+        botao.disabled = false;
+      }
+    });
+  });
+
 </script>
 </body>
 </html>
