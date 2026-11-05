@@ -2,6 +2,13 @@
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
+  if (process.env.VERCEL_ENV !== "preview") {
+    return res.status(404).json({
+      ok: false,
+      mensagem: "Recurso indisponível"
+    });
+  }
+  
   if (req.method !== "GET") {
     return res.status(405).json({
       ok: false,
