@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+<title>Teste Asaas | NEXIA AI</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  background: #090e1b;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+main {
+  max-width: 450px;
+  margin: 50px auto;
+  background: #151e32;
+  padding: 25px;
+  border-radius: 18px;
+  border: 1px solid #7c3aed;
+}
+
+h1 { color: #c4a5ff; }
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  background: #7c3aed;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#resultado {
+  margin-top: 20px;
+  padding: 15px;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+</style>
+</head>
+
+<body>
+<main>
+<h1>💜 NEXIA AI</h1>
+<h2>💳 Teste de conexão Asaas</h2>
+
+<p>🧪 Ambiente Sandbox</p>
+<p>Nenhuma cobrança será criada.</p>
+
+<button id="login">
+  🔐 Entrar com Google
+</button>
+
+<button id="testar">
+  🔌 Testar conexão Asaas
+</button>
+
+<div id="resultado" role="status">
+  Aguardando teste...
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="./config.js"></script>
+
+<script>
+const resultado =
+  document.getElementById("resultado");
+
+const cliente =
+  window.supabase &&
+  window.SUPABASE_URL &&
+  window.SUPABASE_PUBLISHABLE_KEY
+  ? window.supabase.createClient(
+      window.SUPABASE_URL,
+      window.SUPABASE_PUBLISHABLE_KEY
+    )
+  : null;
+
+document.getElementById("login")
+  .addEventListener("click", async () => {
+    if (!cliente) {
+      resultado.textContent =
+        "Supabase não configurado.";
+      return;
+    }
+
+    const { error } =
+      await cliente.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: location.origin +
+            "/teste-asaas.html"
+        }
+      });
+
+    if (error) {
+      resultado.textContent = error.message;
+    }
+  });
+
+document.getElementById("testar")
+  .addEventListener("click", async () => {
+    resultado.textContent =
+      "Verificando conexão...";
+
+    try {
+      if (!cliente) {
+        throw new Error(
+          "Supabase não configurado."
+        );
+      }
+
+      const { data, error } =
+        await cliente.auth.getSession();
+
+      if (error) throw error;
+
+      if (!data.session) {
+        resultado.textContent =
+          "Faça login com Google primeiro.";
+        return;
+      }
+
+      const resposta = await fetch(
+        "/api/asaas-seguro",
+        {
+          method: "GET",
+          cache: "no-store",
+          headers: {
+            Authorization:
+              "Bearer " +
+              data.session.access_token
+          }
+        }
+      );
+
+      const dados = await resposta.json();
+
+      resultado.textContent =
+        dados.mensagem ||
+        "Resposta não reconhecida.";
+
+    } catch (erro) {
+      resultado.textContent =
+        "Erro: " + erro.message;
+    }
+  });
+</script>
+</body>
+</html>
