@@ -75,7 +75,7 @@ export default async function handler(req, res) {
 
     if (
       typeof eventoId !== "string" ||
-      !/^[a-zA-Z0-9_-]{1,160}$/.test(eventoId) ||
+      !/^[a-zA-Z0-9_&-]{1,160}$/.test(eventoId) ||
       typeof tipo !== "string" ||
       !/^[A-Z_]{1,100}$/.test(tipo)
     ) {
